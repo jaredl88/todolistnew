@@ -16,6 +16,7 @@ module.exports = {
       }
     },
     getToken: function () {
+      return sessionStorage.getItem("user");
       return sessionStorage.getItem("token");
     },
     setAuthToken: function (authToken) {

@@ -1,4 +1,4 @@
-import { getUser } from "./service/auth";
+import { getUser } from "../service/auth";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
@@ -11,9 +11,9 @@ const TaskList = () => {
   const [message, setMessage] = useState(null);
   const [tName, setTname] = useState("");
   const [tTxt, setTtxt] = useState("");
-  const userName = getUser();
-  const username = userName.username;
   const [cookies, setCookie] = useCookies(['user']);
+  const username = cookies.user;
+ 
   const tokenType = "Bearer";
 
 
@@ -60,7 +60,7 @@ const TaskList = () => {
     event.preventDefault();
   
     const requestConfig = {
-      //store as envirnment variable later
+
       headers: {
         authorization: `${tokenType} ${cookies.authToken}`,
       },

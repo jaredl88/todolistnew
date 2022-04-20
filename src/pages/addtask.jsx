@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getUser } from "./service/auth";
-import GetAuth from "./service/authToken";
+import { getUser } from "../service/auth";
+import GetAuth from "../service/authToken";
+import {useCookies} from 'react-cookie';
 const apiUrl =
 process.env.REACT_APP_API_PREFIX + "/addtask";
 
 const Todo = () => {
+  const [cookies, setCookie] = useCookies(['user']);
   const [tName, setTName] = useState("");
   const [tTxt, setTxt] = useState("");
-  const userName = getUser();
-  const username = userName.username;
+  const username = cookies.user;
+  console.log(username);
+  
   const [message, setMessage] = useState(null);
   const [getToken, setGetToken] = useState("");
   const tokenType = "Bearer";

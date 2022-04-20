@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Switch, NavLink } from "react-router-dom";
-import Home from "../../Home";
-import Login from "../../Login";
-import Todo from "../../addtask";
-import PublicRoute from "../../routes/PublicRoutes.js";
-import PrivateRoute from "../../routes/PrivateRoutes";
+import { BrowserRouter, Route, Link, Routes, NavLink } from "react-router-dom";
+import  Home  from "../../Home";
+import  Login  from "../../Login";
+import  Todo  from "../../pages/addtask";
 import Register from "../../Register";
-import TaskList from "../../TaskList";
+import TaskList from "../../pages/TaskList";
 import { resetUserSession, getUser } from "../../service/auth";
-import CompletedTaskList from "../../getCompleted";
+import  CompletedTaskList  from "../../pages/getCompleted";
+import { UserContext } from "../../userContext";
+import PublicRoute from "../../routes/PublicRoutes.js";
+import {useCookies} from 'react-cookie';
+import PrivateRoute from "../../routes/PrivateRoutes";
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(null);
-  const user = getUser();
-  //create initial menuCollapse state using useState hook
+  const [cookies, setCookie] = useCookies(['user']);
 
+  const user = getUser();
   useEffect(() => {
      
     if(user !== null && user !== undefined) setLoggedIn(true);
@@ -28,16 +30,17 @@ const Header = (props) => {
     resetUserSession();
     setLoggedIn(false);
     window.location.reload(false);
-    props.history.push("Login");
+    window.open("/login");
   };
 
   return (
     <>
+      
       <BrowserRouter>
         <div class="top-9">
           <div class="navbar">
             <div class="flex-1">
-              <button class="btn shadow-xl" onClick={Home}>
+              <button class="btn shadow-xl" onClick={<Home />}>
                 <NavLink exact activeClassName="active" to="/">
                   Home
                 </NavLink>
@@ -61,19 +64,15 @@ const Header = (props) => {
 
                   <ul class="p-2 bg-base-100 inset-y-7 visible static">
                     <div>
-                      {loggedIn === false ? (
+                      {cookies.user === null || cookies.user === undefined ? (
                         <div>
                           <li>
-                            <NavLink exact activeClassName="active" to="/Login">
+                            <NavLink exact to="/Login">
                               Login
                             </NavLink>
                           </li>
                           <li>
-                            <NavLink
-                              exact
-                              activeClassName="active"
-                              to="/Register"
-                            >
+                            <NavLink to="/Register">
                               Register
                             </NavLink>
                           </li>
@@ -81,28 +80,15 @@ const Header = (props) => {
                       ) : (
                         <div>
                           <li>
-                            <NavLink
-                              exact
-                              activeClassName="active"
-                              to="/addtask"
-                            >
+                            <NavLink to="/addtask">
                               Add Task
                             </NavLink>
                           </li>
                           <li>
-                            <NavLink
-                              exact
-                              activeClassName="active"
-                              to="/TaskList"
-                            >
-                              Task List
-                            </NavLink>
+                            <NavLink  to="/TaskList"> Task List </NavLink>
                           </li>
                           <li>
-                            <NavLink
-                              exact
-                              activeClassName="active"
-                              to="/getCompleted"
+                            <NavLink to="/getCompleted"
                             >
                               Completed Tasks List
                             </NavLink>
@@ -115,10 +101,10 @@ const Header = (props) => {
               </ul>
             </div>
             <div>
-              {loggedIn === false ? (
+              {cookies.user ? (
                 <div class="flex-1 right-0">
-                  <button class="btn shadow-xl" onClick={Login}>
-                    <NavLink exact activeClassName="active" to="/Login">
+                  <button class="btn shadow-xl" onClick={<Login />}>
+                    <NavLink  to="/Login">
                       Login
                     </NavLink>
                   </button>
@@ -134,18 +120,14 @@ const Header = (props) => {
           </div>
         </div>
         <div className="content">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <PublicRoute exact path="/register" component={Register} />
-            <PublicRoute exact path="/login" component={Login} />
-            <PrivateRoute exact path="/addtask" component={Todo} />
-            <PrivateRoute exact path="/TaskList" component={TaskList} />
-            <PrivateRoute
-              exact
-              path="/getCompleted"
-              component={CompletedTaskList}
-            />
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route  path="/register" element={<Register />} />
+            <Route  path="/login" element={<Login />} />
+            <Route  path="/addtask" element={<Todo />} />
+            <Route  path="/TaskList" element={<TaskList />} />
+            <Route  path="/getCompleted" element={<CompletedTaskList />} />
+          </Routes>
         </div>
       </BrowserRouter>
     </>

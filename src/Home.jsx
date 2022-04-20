@@ -1,8 +1,8 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import {useNavigate} from 'react-router-dom'
 
-const Home = () => {
-  const history = useHistory();
+const Home = (props) => {
+  const navigate = useNavigate();
   return (
     <div className="Home">
       <div class="hero min-h-screen bg-base-200">
@@ -20,7 +20,7 @@ const Home = () => {
               <button
                 class="btn btn-primary pr=1.5"
                 onClick={() => {
-                  history.push("/Register");
+                  window.open("/Register");
                 }}
               >
                 Register
@@ -28,7 +28,7 @@ const Home = () => {
               <button
                 class="btn btn-primary"
                 onClick={() => {
-                  history.push("/Login");
+                  window.open("login");
                 }}
               >
                 Login

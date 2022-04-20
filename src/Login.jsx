@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { setUserSession, getUser } from "./service/auth";
 import GetAuth from "./service/authToken";
 import { useCookies } from 'react-cookie';
+import { UserContext } from "./userContext";
 const apiUrl = process.env.REACT_APP_API_PREFIX + '/login';
 
  console.log(apiUrl);
 const Login = (props) => {
+  
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
@@ -44,13 +46,13 @@ const Login = (props) => {
       .post(apiUrl, requestBody, requestConfig)
       .then((response) => {
         setUserSession(response.data.user, response.data.token);
-        setCookie('user', response.data.user, {path: '/' });
+        setCookie('user', response.data.user.username, {path: '/' });
         setCookie('token', response.data.token, {path: '/'});
         setCookie('authToken', getToken, {path: '/'})
-        props.history.push("/addtask");
+        window.open("/addtask");
       })
       .catch((error) => {
-        if (error.response.status === 401 || error.response.status === 403) {
+        if (error.response === 401 || error.response === 403) {
           setErrorMessage(error.response.data.message);
         } else {
           setErrorMessage("Sorry the server is down, please try again later");

@@ -1,4 +1,4 @@
-import { getUser } from "./service/auth";
+import { getUser } from "../service/auth";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useCookies } from 'react-cookie';
@@ -11,9 +11,8 @@ const CompletedTaskList = () => {
   const [message, setMessage] = useState(null);
   const [tTxt, setTtxt] = useState("");
   const [tName, setTname] = useState("");
-  const [cookies, setCookie, removeCookie] = useCookies(['user']);
-  const userName = getUser();
-  const username = userName.username;
+  const [cookies, setCookie] = useCookies(['user']);
+  const username = cookies.user;
 
   
 
