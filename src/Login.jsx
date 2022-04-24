@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { setUserSession, getUser } from "./service/auth";
 import GetAuth from "./service/authToken";
 import { useCookies } from 'react-cookie';
-import { UserContext } from "./userContext";
 const apiUrl = process.env.REACT_APP_API_PREFIX + '/login';
 
  console.log(apiUrl);
@@ -42,14 +40,14 @@ const Login = (props) => {
       password: password,
     };
 
-    axios
-      .post(apiUrl, requestBody, requestConfig)
+    axios.post(apiUrl, requestBody, requestConfig)
       .then((response) => {
-        setUserSession(response.data.user, response.data.token);
+        console.log(response.data.user.username);
+       // setUserSession(response.data.user, response.data.token);
         setCookie('user', response.data.user.username, {path: '/' });
         setCookie('token', response.data.token, {path: '/'});
         setCookie('authToken', getToken, {path: '/'})
-        window.open("/addtask");
+       
       })
       .catch((error) => {
         if (error.response === 401 || error.response === 403) {

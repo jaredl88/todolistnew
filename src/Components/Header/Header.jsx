@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Link, Routes, NavLink } from "react-router-dom";
+import { BrowserRouter, Route, Navigate, Routes, NavLink, useNavigate } from "react-router-dom";
 import  Home  from "../../Home";
 import  Login  from "../../Login";
 import  Todo  from "../../pages/addtask";
@@ -7,31 +7,31 @@ import Register from "../../Register";
 import TaskList from "../../pages/TaskList";
 import { resetUserSession, getUser } from "../../service/auth";
 import  CompletedTaskList  from "../../pages/getCompleted";
-import { UserContext } from "../../userContext";
-import PublicRoute from "../../routes/PublicRoutes.js";
-import {useCookies} from 'react-cookie';
+import {useCookies, removeCookie} from 'react-cookie';
 import PrivateRoute from "../../routes/PrivateRoutes";
+import PublicRoute from "../../routes/PublicRoutes";
+
 const Header = (props) => {
   const [loggedIn, setLoggedIn] = useState(null);
-  const [cookies, setCookie] = useCookies(['user']);
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
 
   const user = getUser();
-  useEffect(() => {
+  //useEffect(() => {
      
-    if(user !== null && user !== undefined) setLoggedIn(true);
+     /* if(user !== null && user !== undefined) setLoggedIn(true);
     else setLoggedIn(false);
     console.log(user);
   }, [loggedIn]);
   useEffect(() => {
     console.log(loggedIn);
   }, [loggedIn]);
-
-  const Logout = () => {
+*/
+   const Logout = () => {
     resetUserSession();
+    removeCookie('user');
     setLoggedIn(false);
-    window.location.reload(false);
-    window.open("/login");
-  };
+    useNavigate('/Login');
+  }; 
 
   return (
     <>
@@ -102,31 +102,35 @@ const Header = (props) => {
             </div>
             <div>
               {cookies.user ? (
-                <div class="flex-1 right-0">
-                  <button class="btn shadow-xl" onClick={<Login />}>
-                    <NavLink  to="/Login">
-                      Login
-                    </NavLink>
-                  </button>
-                </div>
+                 <div class="flex-1 right-0">
+                 <button class="btn shadow-xl" onClick={Logout}>
+                   Logout
+                 </button>
+               </div>
               ) : (
                 <div class="flex-1 right-0">
-                  <button class="btn shadow-xl" onClick={Logout}>
-                    Logout
-                  </button>
-                </div>
+                <button class="btn shadow-xl" onClick={<Login />}>
+                  <NavLink  to="/Login">
+                    Login
+                  </NavLink>
+                </button>
+              </div>
               )}
             </div>
           </div>
         </div>
         <div className="content">
           <Routes>
+          <Route path="/"element={<PublicRoute />}>
             <Route path="/" element={<Home />} />
             <Route  path="/register" element={<Register />} />
             <Route  path="/login" element={<Login />} />
-            <Route  path="/addtask" element={<Todo />} />
-            <Route  path="/TaskList" element={<TaskList />} />
-            <Route  path="/getCompleted" element={<CompletedTaskList />} />
+             </Route>
+            <Route path="/"element={<PrivateRoute />}>
+            <Route path="/addtask" element={<Todo />} />
+            <Route path="/TaskList" element={<TaskList />} />
+            <Route path="/getCompleted" element={<CompletedTaskList/>} />
+            </Route>
           </Routes>
         </div>
       </BrowserRouter>
