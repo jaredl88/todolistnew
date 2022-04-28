@@ -127,7 +127,6 @@ const Header = (props) => {
             <Route  path="/login" element={<Login />} />
              </Route>
             <Route path="/"element={<PrivateRoute />}>
-            <Route path="/" element={<Home />} />
             <Route path="/addtask" element={<Todo />} />
             <Route path="/TaskList" element={<TaskList />} />
             <Route path="/getCompleted" element={<CompletedTaskList/>} />

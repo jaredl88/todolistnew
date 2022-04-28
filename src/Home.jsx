@@ -14,7 +14,7 @@ const Home = (props) => {
               add tasks to your task list, view task your list, set tasks as
               complete, and view a list of your completed tasks. It uses API
               Gateway, Lambda, and DynamoDB for the back-end. For the front end
-              I used React hosted on Github pages and also on S3.
+              I used React on an S3 bucket.
             </p>
             <div class="space-x-4">
               <button
